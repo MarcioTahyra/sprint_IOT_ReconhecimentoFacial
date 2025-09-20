@@ -36,3 +36,6 @@ Este projeto tem fins exclusivamente educacionais/prototipagem e não deve ser u
 - Armazenamento seguro (criptografia, anonimização).
 - Auditoria de vieses (garantir que funcione para diferentes etnias, idades e gêneros).
 - Conformidade com as leis de proteção de dados.
+
+  ## link do vídeos explicativo
+  https://youtu.be/aI_Wlgz2OXw
