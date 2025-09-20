@@ -1,5 +1,10 @@
 # Reconhecimento Facial para Autenticação Bancária
 
+## Integrantes
+- Gustavo Kenzo - 98481
+- Vinícius Almeida Bernardino de Souza - 97888
+- Márcio Hitoshi Tahyra - 552511
+
 ## Objetivo
 Este projeto é um **protótipo** de sistema de autenticação para aplicativos bancários que combina:
 - **Login por senha** (tradicional)
