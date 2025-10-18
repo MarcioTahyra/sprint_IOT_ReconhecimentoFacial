@@ -26,7 +26,6 @@ db = pickle.load(open(DB_FILE, "rb")) if os.path.exists(DB_FILE) else {}
 users = pickle.load(open(USERS_FILE, "rb")) if os.path.exists(USERS_FILE) else {}
 
 
-
 def get_embedding(img, rect):
     shape = sp(img, rect)
     chip = dlib.get_face_chip(img, shape)
@@ -62,8 +61,6 @@ def processar_frame_para_embedding(base64_img):
         img_bytes = b64decode(encoded)
         img = Image.open(BytesIO(img_bytes))
         img_np = np.array(img.convert("RGB"))
-
-
 
         rects = detector(img_np, 1)
 

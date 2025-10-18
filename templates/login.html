@@ -31,7 +31,7 @@
             font-weight: 300;
         }
         input[type="text"], input[type="password"] {
-            width: 90%;
+            width: 100%;
             padding: 12px;
             margin-bottom: 15px;
             border: 1px solid #333333;
@@ -64,15 +64,17 @@
             opacity: 0.6;
             cursor: not-allowed;
         }
+
         #webcam-video {
             width: 100%;
             height: auto;
             border-radius: 4px;
             background: black;
-            display: block;
-            margin-bottom: 15px;
+            display: none;
+            margin: 0 auto 15px auto;
             border: 1px solid #333333;
         }
+
         .link {
             text-align: center;
             margin-top: 20px;
@@ -91,13 +93,11 @@
             <input type="text" name="username" placeholder="Usuário" required>
             <input type="password" name="password" placeholder="Senha" required>
 
-
             <video id="webcam-video" autoplay></video>
             <canvas id="webcam-canvas" style="display:none;"></canvas>
-
             <input type="hidden" name="image_data" id="image_data">
 
-            <button type="submit" id="btn-submit">ENTRAR</button>
+            <button type="submit" id="btn-submit">INICIAR CÂMERA</button>
         </form>
 
         <div class="link">
@@ -108,9 +108,16 @@
     <script src="{{ url_for('static', filename='js/webcam.js') }}"></script>
 
     <script>
-        // Configuração para o login
         document.addEventListener('DOMContentLoaded', () => {
-            initWebcam('auth-form', 'webcam-video', 'webcam-canvas', 'image_data', 'btn-submit', '/api/login', '{{ url_for("dashboard") }}');
+            initWebcam(
+                'auth-form',
+                'webcam-video',
+                'webcam-canvas',
+                'image_data',
+                'btn-submit',
+                '/api/login',
+                '{{ url_for("dashboard") }}'
+            );
         });
     </script>
 </body>

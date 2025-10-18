@@ -22,6 +22,7 @@ function initWebcam(formId, videoId, canvasId, dataInputId, btnId, apiUrl, redir
     const imageDataInput = document.getElementById(dataInputId);
     const form = document.getElementById(formId);
     const submitBtn = document.getElementById(btnId);
+    let cameraStarted = false;
 
     if (!document.getElementById('notification-area')) {
         const notificationDiv = document.createElement('div');
@@ -40,25 +41,48 @@ function initWebcam(formId, videoId, canvasId, dataInputId, btnId, apiUrl, redir
         document.body.appendChild(notificationDiv);
     }
 
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => {
-                video.srcObject = stream;
-            })
-            .catch(err => {
-                console.error("Erro ao acessar a câmera: ", err);
-                showNotification("ERRO: Não foi possível acessar a câmera. Verifique as permissões.");
-                submitBtn.disabled = true; /
-            });
-    } else {
-        showNotification("Seu navegador não suporta a API de Webcam.");
-        submitBtn.disabled = true;
+    function startCamera() {
+        if (cameraStarted) return;
+
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    video.srcObject = stream;
+                    cameraStarted = true;
+                    video.style.display = 'block';
+                    submitBtn.textContent = (apiUrl.includes('login') ? 'ENTRAR' : 'CADASTRAR');
+                    submitBtn.dataset.action = 'submit';
+                })
+                .catch(err => {
+                    console.error("Erro ao acessar a câmera: ", err);
+                    showNotification("ERRO: Não foi possível acessar a câmera. Verifique as permissões.");
+                    submitBtn.disabled = true;
+                });
+        } else {
+            showNotification("Seu navegador não suporta a API de Webcam.");
+            submitBtn.disabled = true;
+        }
     }
+
+    submitBtn.dataset.action = 'start-camera';
 
     form.addEventListener('submit', function(e) {
         e.preventDefault();
 
-        if (video.videoWidth === 0 && video.style.display !== 'none') {
+        if (submitBtn.dataset.action === 'start-camera') {
+            const username = form.querySelector('input[name="username"]').value.trim();
+            const password = form.querySelector('input[name="password"]').value.trim();
+
+            if (!username || !password) {
+                 showNotification("Preencha Usuário e Senha antes de iniciar a câmera.");
+                 return;
+            }
+
+            startCamera();
+            return;
+        }
+
+        if (video.videoWidth === 0) {
             showNotification("Aguarde a câmera iniciar ou verifique as permissões.");
             return;
         }
@@ -92,7 +116,7 @@ function initWebcam(formId, videoId, canvasId, dataInputId, btnId, apiUrl, redir
         .then(data => {
             showNotification(data.message, data.success);
             submitBtn.disabled = false;
-            submitBtn.textContent = (apiUrl.includes('login') ? 'Entrar' : 'Cadastrar');
+            submitBtn.textContent = (apiUrl.includes('login') ? 'ENTRAR' : 'CADASTRAR');
 
             if (data.success) {
                 setTimeout(() => {
@@ -105,7 +129,7 @@ function initWebcam(formId, videoId, canvasId, dataInputId, btnId, apiUrl, redir
             const errorMessage = error.message.includes('Erro do servidor') ? error.message : 'Erro de comunicação com o servidor. Verifique se o Flask está rodando.';
             showNotification(errorMessage);
             submitBtn.disabled = false;
-            submitBtn.textContent = (apiUrl.includes('login') ? 'Entrar' : 'Cadastrar');
+            submitBtn.textContent = (apiUrl.includes('login') ? 'ENTRAR' : 'CADASTRAR');
         });
     });
 }

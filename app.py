@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session
 import random
-
 from dlib_utils import processar_frame_para_embedding, reconhecer, salvar_usuario, users
 
 app = Flask(__name__)
@@ -128,4 +127,4 @@ def api_cadastro():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(port=5000)
