@@ -2,18 +2,174 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
+    <title>Dashboard - Recomendação</title>
     <style>
-        body { font-family: sans-serif; background-color: #2c3e50; color: #2ecc71; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        h1 { font-size: 3em; }
-        p { font-size: 1.2em; color: #ecf0f1; }
-        a { color: #3498db; text-decoration: none; margin-top: 20px; padding: 10px 20px; border: 1px solid #3498db; border-radius: 4px; transition: background-color 0.3s; }
-        a:hover { background-color: #3498db; color: #ecf0f1; }
+        body {
+            font-family: sans-serif;
+            background-color: #121212;
+            color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        h1 {
+            font-size: 3em;
+            color: #FFC60A;
+            margin-bottom: 5px;
+            font-weight: 300;
+        }
+        h2 {
+            color: #FFFFFF;
+            border-bottom: 2px solid #333333;
+            padding-bottom: 5px;
+            margin-top: 25px;
+            font-weight: normal;
+        }
+        p, .info-block {
+            font-size: 1.1em;
+            color: #f0f0f0;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .dashboard-content {
+            width: 90%;
+            max-width: 800px;
+            background: #1e1e1e;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+        .profile-box {
+            background-color: #121212;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 5px solid #FFC60A;
+            text-align: left;
+        }
+        .profile-box p {
+            margin: 5px 0;
+            text-align: left;
+        }
+        .alocacao {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 15px;
+        }
+        .alocacao-item {
+            background: #282828;
+            padding: 15px 10px;
+            margin: 5px;
+            border-radius: 4px;
+            flex-basis: 30%;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .alocacao-item strong {
+            display: block;
+            font-size: 1.6em;
+            color: #FFC60A;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #333333;
+            text-align: left;
+        }
+        th {
+            background-color: #282828;
+            color: #FFFFFF;
+        }
+        .retorno-box {
+            background-color: #FFC60A;
+            color: #121212;
+            padding: 20px;
+            border-radius: 6px;
+            margin-top: 30px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.6em;
+        }
+        a {
+            color: #FFFFFF;
+            text-decoration: none;
+            margin-top: 30px;
+            padding: 10px 20px;
+            border: 1px solid #FFC60A;
+            border-radius: 4px;
+            background-color: #1e1e1e;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        a:hover {
+            background-color: #FFC60A;
+            color: #121212;
+        }
     </style>
 </head>
 <body>
-    <h1>ACESSO LIBERADO!</h1>
-    <p>Você fez login com sucesso usando a autenticação facial e a senha.</p>
+    <h1>BEM-VINDO(A)!</h1>
+    <p>Olá, {{ username }}! Seu painel de investimentos e recomendações.</p>
+
+    <div class="dashboard-content">
+        <h2>SEU PERFIL DE SUITABILITY</h2>
+        <div class="profile-box">
+            <p><strong>Perfil Classificado:</strong>
+                <span style="color: #FFC60A; font-weight: bold;">
+                    {{ perfil | upper }}
+                </span>
+            </p>
+            <p><strong>Objetivo Principal:</strong>
+                {% if perfil == 'Conservador' %}Preservação de Capital com Liquidez e Segurança.{% elif perfil == 'Moderado' %}Busca por Retorno acima da Renda Fixa com Risco Controlado.{% else %}Maximização de Retornos, aceitando Alta Volatilidade.{% endif %}
+            </p>
+        </div>
+
+        <h2>ALOCAÇÃO ESTRATÉGICA RECOMENDADA</h2>
+        <p style="text-align: center;">Com base no seu perfil <strong>{{ perfil | upper }}</strong>, sugerimos a seguinte divisão de ativos:</p>
+        <div class="alocacao">
+            {% for tipo, percentual in alocacao.items() %}
+            <div class="alocacao-item">
+                <strong>{{ percentual }}</strong>
+                <span>{{ tipo }}</span>
+            </div>
+            {% endfor %}
+        </div>
+
+        <h2>ATIVOS SUGERIDOS PARA SUA CARTEIRA</h2>
+        <table class="ativos-table">
+            <thead>
+                <tr>
+                    <th>Ativo</th>
+                    <th>% Sugerido</th>
+                    <th>Risco</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ativo in ativos %}
+                <tr>
+                    <td>{{ ativo.nome }}</td>
+                    <td>{{ ativo.percentual }}</td>
+                    <td>{{ ativo.risco }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="retorno-box">
+            Rentabilidade Anual Esperada: {{ retorno }}
+        </div>
+
+    </div>
+
     <a href="{{ url_for('login') }}">Sair e Voltar para Login</a>
 </body>
 </html>
